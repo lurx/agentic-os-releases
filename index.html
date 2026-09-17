@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agentic OS — הורדה</title>
+    <meta name="description" content="הורדת גרסת האלפא של Agentic OS ל-macOS ול-Windows" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f2f5f8;
+        --surface: #ffffff;
+        --text: #10161c;
+        --muted: #5b6672;
+        --border: #d9e0e6;
+        --primary: #0d8474;
+        --primary-strong: #0a6a5d;
+        --warning-bg: #fdf4ec;
+        --warning-border: #e4c9ac;
+        --warning-text: #7a4113;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f1518;
+          --surface: #161d22;
+          --text: #e7edf1;
+          --muted: #9aa7b2;
+          --border: #263038;
+          --primary: #2fa894;
+          --primary-strong: #3cc0aa;
+          --warning-bg: #2a1d12;
+          --warning-border: #5c4326;
+          --warning-text: #e8bf93;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px 20px 64px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Noto Sans Hebrew', system-ui, -apple-system, 'Arial Hebrew', sans-serif;
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      main {
+        max-inline-size: 760px;
+        margin-inline: auto;
+      }
+
+      header {
+        margin-block-end: 36px;
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        font-size: 34px;
+        letter-spacing: -0.01em;
+      }
+
+      .tagline {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .badge {
+        display: inline-block;
+        margin-inline-start: 10px;
+        padding: 3px 12px;
+        border: 1px solid var(--warning-border);
+        border-radius: 999px;
+        background: var(--warning-bg);
+        color: var(--warning-text);
+        font-size: 13px;
+        font-weight: 600;
+        vertical-align: middle;
+      }
+
+      .downloads {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        margin-block-end: 20px;
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 22px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--surface);
+      }
+
+      .card h2 {
+        margin: 0;
+        font-size: 19px;
+      }
+
+      .card .meta {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .button {
+        margin-block-start: auto;
+        padding: 13px 20px;
+        border-radius: 10px;
+        background: var(--primary);
+        color: #fff;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .button:hover {
+        background: var(--primary-strong);
+      }
+
+      .version-line {
+        margin-block-end: 36px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      section {
+        margin-block-end: 32px;
+      }
+
+      h3 {
+        margin: 0 0 10px;
+        font-size: 19px;
+      }
+
+      p {
+        margin: 0 0 12px;
+      }
+
+      ol,
+      ul {
+        margin: 0 0 12px;
+        padding-inline-start: 22px;
+      }
+
+      li {
+        margin-block-end: 6px;
+      }
+
+      .note {
+        padding: 16px 18px;
+        border: 1px solid var(--warning-border);
+        border-radius: 12px;
+        background: var(--warning-bg);
+        color: var(--warning-text);
+      }
+
+      .note h3 {
+        color: inherit;
+      }
+
+      code {
+        padding: 2px 6px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg);
+        font-size: 14px;
+        direction: ltr;
+        display: inline-block;
+      }
+
+      footer {
+        padding-block-start: 24px;
+        border-block-start: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      a {
+        color: var(--primary-strong);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Agentic OS <span class="badge">גרסת אלפא</span></h1>
+        <p class="tagline">מרכז הפיקוד לעסק שלכם — מותקן על המחשב, עובד מול Claude Code.</p>
+      </header>
+
+      <div class="downloads">
+        <article class="card">
+          <h2>macOS</h2>
+          <p class="meta">למחשבי Mac עם שבב Apple (M1 ומעלה)</p>
+          <a class="button" id="mac-link" href="https://github.com/lurx/agentic-os-releases/releases/latest">
+            הורדה ל-Mac
+          </a>
+        </article>
+
+        <article class="card">
+          <h2>Windows</h2>
+          <p class="meta">Windows 10 או 11, כולל מחשבי ARM</p>
+          <a class="button" id="win-link" href="https://github.com/lurx/agentic-os-releases/releases/latest">
+            הורדה ל-Windows
+          </a>
+        </article>
+      </div>
+
+      <p class="version-line" id="version-line">טוען את פרטי הגרסה האחרונה…</p>
+
+      <section class="note">
+        <h3>בפתיחה הראשונה המחשב יזהיר אתכם</h3>
+        <p>
+          זו גרסת אלפא שעדיין לא נחתמה דיגיטלית, ולכן מערכת ההפעלה לא מזהה מי פרסם אותה. זה צפוי — כך זה ייראה עד
+          שנוציא גרסה חתומה.
+        </p>
+        <p><strong>ב-Mac:</strong> אם נפתחה הודעה שלא ניתן לאמת את המפתח —</p>
+        <ol>
+          <li>פותחים <strong>הגדרות מערכת</strong> ← <strong>פרטיות ואבטחה</strong>.</li>
+          <li>גוללים למטה, ליד השם AgenticOS לוחצים <strong>פתח בכל זאת</strong>.</li>
+          <li>מאשרים שוב בחלון שנפתח. בפעמים הבאות האפליקציה תיפתח רגיל.</li>
+        </ol>
+        <p><strong>ב-Windows:</strong> אם עולה חלון כחול של SmartScreen —</p>
+        <ol>
+          <li>לוחצים על <strong>מידע נוסף</strong>.</li>
+          <li>לוחצים <strong>הפעל בכל זאת</strong>.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h3>מה צריך במחשב</h3>
+        <ul>
+          <li>כחצי ג'יגה פנוי בדיסק להתקנה.</li>
+          <li>חשבון Claude פעיל ו-Claude Code מותקן — האפליקציה מלווה אתכם בהתקנה במסך הראשון.</li>
+          <li>חיבור לאינטרנט בפתיחה הראשונה.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>עדכון לגרסה חדשה</h3>
+        <p>
+          פשוט מריצים את ההתקנה החדשה מעל הקיימת. אין צורך להסיר את הגרסה הקודמת, ותיקיית העבודה
+          <code>~/AgenticOS</code> נשארת כמו שהיא — הסוכנים, הזיכרון והתוצרים נשמרים.
+        </p>
+      </section>
+
+      <footer>
+        <p>
+          נתקלתם בבאג? ספרו לרותם. <a href="https://github.com/lurx/agentic-os-releases/releases">כל הגרסאות</a>
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      const RELEASES_API = 'https://api.github.com/repos/lurx/agentic-os-releases/releases/latest';
+      const MB = 1024 * 1024;
+
+      function formatSize(bytes) {
+        return `${Math.round(bytes / MB)}MB`;
+      }
+
+      function formatDate(iso) {
+        return new Date(iso).toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+      }
+
+      function applyAsset(asset, linkId, cardLabel) {
+        if (!asset) return;
+        const link = document.getElementById(linkId);
+        link.href = asset.browser_download_url;
+        link.textContent = `${cardLabel} · ${formatSize(asset.size)}`;
+      }
+
+      async function loadLatestRelease() {
+        const line = document.getElementById('version-line');
+        try {
+          const response = await fetch(RELEASES_API);
+          if (!response.ok) throw new Error(String(response.status));
+          const release = await response.json();
+          const assets = release.assets ?? [];
+          applyAsset(
+            assets.find((asset) => asset.name.endsWith('.dmg')),
+            'mac-link',
+            'הורדה ל-Mac',
+          );
+          applyAsset(
+            assets.find((asset) => asset.name.endsWith('.exe')),
+            'win-link',
+            'הורדה ל-Windows',
+          );
+          line.textContent = `גרסה ${release.tag_name} · פורסמה ב-${formatDate(release.published_at)}`;
+        } catch {
+          line.textContent = 'לא הצלחנו לטעון את פרטי הגרסה. הכפתורים מובילים לרשימת הגרסאות ב-GitHub.';
+        }
+      }
+
+      loadLatestRelease();
+    </script>
+  </body>
+</html>
