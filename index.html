@@ -11,6 +11,9 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script>
+      document.documentElement.dataset.platform = 'pending';
+    </script>
     <style>
       :root {
         --bg: #f2f5f8;
@@ -191,6 +194,35 @@
       a {
         color: var(--primary-strong);
       }
+
+      /* Platform detection: show only what the visitor's computer can run. */
+      .unsupported {
+        display: none;
+      }
+
+      [data-platform='pending'] .downloads,
+      [data-platform='pending'] .note,
+      [data-platform='mac'] [data-os='windows'],
+      [data-platform='windows'] [data-os='mac'],
+      [data-platform='unsupported'] .downloads,
+      [data-platform='unsupported'] .note {
+        display: none;
+      }
+
+      [data-platform='unsupported'] .unsupported {
+        display: block;
+        margin-block-end: 36px;
+      }
+
+      .unsupported h2 {
+        margin: 0 0 8px;
+        font-size: 19px;
+      }
+
+      .unsupported p {
+        margin: 0;
+        color: var(--muted);
+      }
     </style>
   </head>
   <body>
@@ -201,7 +233,7 @@
       </header>
 
       <div class="downloads">
-        <article class="card">
+        <article class="card" data-os="mac">
           <h2>macOS</h2>
           <p class="meta">למחשבי Mac עם שבב Apple (M1 ומעלה)</p>
           <a class="button" id="mac-link" href="https://github.com/lurx/agentic-os-releases/releases">
@@ -209,7 +241,7 @@
           </a>
         </article>
 
-        <article class="card">
+        <article class="card" data-os="windows">
           <h2>Windows</h2>
           <p class="meta">Windows 10 או 11, כולל מחשבי ARM</p>
           <a class="button" id="win-link" href="https://github.com/lurx/agentic-os-releases/releases">
@@ -217,6 +249,11 @@
           </a>
         </article>
       </div>
+
+      <article class="card unsupported" id="unsupported">
+        <h2 id="unsupported-title"></h2>
+        <p id="unsupported-text"></p>
+      </article>
 
       <p class="version-line" id="version-line">טוען את פרטי הגרסה האחרונה…</p>
 
@@ -226,17 +263,26 @@
           זו גרסת אלפא שעדיין לא נחתמה דיגיטלית, ולכן מערכת ההפעלה לא מזהה מי פרסם אותה. זה צפוי — כך זה ייראה עד
           שנוציא גרסה חתומה.
         </p>
-        <p><strong>ב-Mac:</strong> אם נפתחה הודעה שלא ניתן לאמת את המפתח —</p>
-        <ol>
-          <li>פותחים <strong>הגדרות מערכת</strong> ← <strong>פרטיות ואבטחה</strong>.</li>
-          <li>גוללים למטה, ליד השם AgenticOS לוחצים <strong>פתח בכל זאת</strong>.</li>
-          <li>מאשרים שוב בחלון שנפתח. בפעמים הבאות האפליקציה תיפתח רגיל.</li>
-        </ol>
-        <p><strong>ב-Windows:</strong> אם עולה חלון כחול של SmartScreen —</p>
-        <ol>
-          <li>לוחצים על <strong>מידע נוסף</strong>.</li>
-          <li>לוחצים <strong>הפעל בכל זאת</strong>.</li>
-        </ol>
+        <div data-os="mac">
+          <p><strong>ב-Mac:</strong> אם נפתחה הודעה ש-Apple לא יכולה לאמת את AgenticOS —</p>
+          <ol>
+            <li>סוגרים את ההודעה בלחיצה על <strong>סיום</strong>.</li>
+            <li>פותחים <strong>הגדרות מערכת</strong> ← <strong>פרטיות ואבטחה</strong>.</li>
+            <li>גוללים למטה, ליד השם AgenticOS לוחצים <strong>פתח בכל זאת</strong>.</li>
+            <li>מאשרים שוב בחלון שנפתח. בפעמים הבאות האפליקציה תיפתח רגיל.</li>
+          </ol>
+          <p>
+            הופיעה הודעה שהאפליקציה <strong>פגומה</strong>? זו הורדה ישנה מלפני תיקון. מוחקים אותה, מורידים שוב
+            מהדף הזה ומתקינים מחדש.
+          </p>
+        </div>
+        <div data-os="windows">
+          <p><strong>ב-Windows:</strong> אם עולה חלון כחול של SmartScreen —</p>
+          <ol>
+            <li>לוחצים על <strong>מידע נוסף</strong>.</li>
+            <li>לוחצים <strong>הפעל בכל זאת</strong>.</li>
+          </ol>
+        </div>
       </section>
 
       <section>
@@ -268,6 +314,65 @@
       // build is published as one. The list endpoint is newest-first.
       const RELEASES_API = 'https://api.github.com/repos/lurx/agentic-os-releases/releases?per_page=1';
       const MB = 1024 * 1024;
+
+      const UNSUPPORTED_MESSAGES = {
+        mobile: {
+          title: 'צריך להוריד מהמחשב',
+          text: 'Agentic OS מותקן על מחשב Mac או Windows. פתחו את הדף הזה מהמחשב שעליו תרצו להתקין.',
+        },
+        'mac-intel': {
+          title: 'ה-Mac הזה עדיין לא נתמך',
+          text: 'הגרסה הנוכחית רצה רק על מחשבי Mac עם שבב Apple (M1 ומעלה). מחשבי Mac עם מעבד Intel לא נתמכים בשלב הזה.',
+        },
+        other: {
+          title: 'המערכת הזו עדיין לא נתמכת',
+          text: 'Agentic OS זמין כרגע ל-Mac עם שבב Apple ול-Windows 10 או 11 בלבד.',
+        },
+      };
+
+      // Chromium browsers expose the platform and, on request, the CPU
+      // architecture, which is the only reliable way to spot an Intel Mac.
+      // Safari and Firefox report every Mac as Intel, so there we assume Apple
+      // silicon and rely on the card's own "M1 and up" line.
+      async function detectPlatform() {
+        const uaData = navigator.userAgentData;
+        if (uaData?.platform) {
+          if (uaData.mobile || uaData.platform === 'Android' || uaData.platform === 'iOS') return 'mobile';
+          if (uaData.platform === 'Windows') return 'windows';
+          if (uaData.platform !== 'macOS') return 'other';
+          try {
+            const { architecture } = await uaData.getHighEntropyValues(['architecture']);
+            if (architecture === 'x86') return 'mac-intel';
+          } catch {
+            // Architecture hint unavailable; fall through to Apple silicon.
+          }
+          return 'mac';
+        }
+        const ua = navigator.userAgent;
+        if (/iPhone|iPad|iPod|Android/.test(ua)) return 'mobile';
+        // iPadOS Safari asks for desktop sites and reports itself as a Mac.
+        if (/Macintosh/.test(ua)) return navigator.maxTouchPoints > 1 ? 'mobile' : 'mac';
+        if (/Windows/.test(ua)) return 'windows';
+        return 'other';
+      }
+
+      async function applyPlatform() {
+        const root = document.documentElement;
+        try {
+          const platform = await detectPlatform();
+          const message = UNSUPPORTED_MESSAGES[platform];
+          if (message) {
+            document.getElementById('unsupported-title').textContent = message.title;
+            document.getElementById('unsupported-text').textContent = message.text;
+            root.dataset.platform = 'unsupported';
+            return;
+          }
+          root.dataset.platform = platform;
+        } catch {
+          // Detection failed: show every download rather than none.
+          delete root.dataset.platform;
+        }
+      }
 
       function formatSize(bytes) {
         return `${Math.round(bytes / MB)}MB`;
@@ -308,6 +413,7 @@
         }
       }
 
+      applyPlatform();
       loadLatestRelease();
     </script>
   </body>
