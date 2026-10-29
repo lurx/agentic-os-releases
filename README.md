@@ -26,7 +26,7 @@
 npm run dist:mac   # יוצר release/AgenticOS-<version>-arm64.dmg
 npm run dist:win   # יוצר "release/AgenticOS Setup <version>.exe"
 
-gh release create v<version>-alpha \
+gh release create v<version>-alpha --draft --prerelease \
   --repo lurx/agentic-os-releases \
   --title "Agentic OS <version> — אלפא" \
   --notes-file notes.md \
@@ -35,3 +35,19 @@ gh release create v<version>-alpha \
 ```
 
 דף ההורדה (`index.html`) מושך את הגרסה האחרונה מ-API של GitHub, ולכן הוא לא דורש עדכון בכל פעם.
+
+### בדיקת שדרוג לפני פרסום
+
+הגרסה עולה קודם כטיוטה (`--draft`), שדף ההורדה לא מציג. את בדיקת השדרוג מריצים ידנית — היא אף פעם לא רצה לבד:
+
+```bash
+gh workflow run upgrade-test.yml --repo lurx/agentic-os-releases \
+  -f from_tag=v<previous>-alpha -f to_tag=v<version>-alpha
+gh run watch --repo lurx/agentic-os-releases
+```
+
+הבדיקה מתקינה את הגרסה הקודמת על Windows (x64 ו-ARM64), פותחת אותה על מרחב עבודה ישן, מתקינה מעליה את הגרסה החדשה ובודקת ש-`CLAUDE.md` עודכן בלי לאבד שינויים של המשתמש. אם עברה — מפרסמים:
+
+```bash
+gh release edit v<version>-alpha --repo lurx/agentic-os-releases --draft=false
+```

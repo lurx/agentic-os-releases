@@ -1,0 +1,49 @@
+name: Upgrade test
+
+# On demand only: never runs on push, PRs or releases.
+on:
+  workflow_dispatch:
+    inputs:
+      from_tag:
+        description: Release tag testers already have installed
+        required: true
+        default: v0.1.1-alpha
+      to_tag:
+        description: Release tag to upgrade to (a draft release is fine)
+        required: true
+
+permissions:
+  # Draft releases are only listed for tokens with push access.
+  contents: write
+
+jobs:
+  windows:
+    name: Windows ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: windows-latest
+          - arch: arm64
+            runner: windows-11-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ${{ inputs.from_tag }}, then upgrade to ${{ inputs.to_tag }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FROM_TAG: ${{ inputs.from_tag }}
+          TO_TAG: ${{ inputs.to_tag }}
+        run: ./tests/upgrade/upgrade-test.ps1 -FromTag $env:FROM_TAG -ToTag $env:TO_TAG -Repo $env:GITHUB_REPOSITORY
+
+      - name: Keep the workspace and app logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: upgrade-test-${{ matrix.arch }}
+          path: ${{ runner.temp }}/upgrade-test/out
+          if-no-files-found: ignore
